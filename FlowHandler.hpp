@@ -10,8 +10,8 @@ using namespace std;
 class FlowHandler {
 public:
 
-	string precisionString, nString, colString;
-	double precision, n, col;
+	string precisionString, nString;
+	double precision, n;
 	bool shouldContinue = true;
 	double b[10], A[10][10];
 	EquationSolver equationSolver;
@@ -19,10 +19,6 @@ public:
 	void startInteraction() {
 
 		askForDeslocationValue();
-
-		if(shouldContinue){
-			askForColumnValue();
-		}
 
 		if(shouldContinue){
 			askForMatrixAValues();
@@ -62,23 +58,11 @@ public:
 		}
 	}
 
-	void askForColumnValue() {
-
-		cout << "\n\nDigite o número de colunas da Matriz A: ";
-		cin >> colString;
-		if(isNumber(colString)) {
-			col = stod(colString);
-		} else {
-			cout << "\n" << colString << " é inválido. Não é um número.\n";
-			shouldContinue = false;
-		}
-	}
-
 	void askForMatrixAValues() {
 
 		cout << "\n\nValores da Matriz A\n\n";
 		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < col; j++) {
+			for (int j = 0; j < n; j++) {
 				cout << "Digite o valor de A[" << i+1 << "][" << j+1 << "]: ";
 				string value;
 				cin >> value;
@@ -117,6 +101,7 @@ public:
 		cin >> precisionString;
 		if (isNumber(precisionString)){
 			precision = stod(precisionString);
+			equationSolver.error = precision;
 		} else {
 			cout << "\n" << precisionString << " é inválido. Não é um número.\n";
 			shouldContinue = false;
@@ -127,7 +112,7 @@ public:
 
 		cout << "\nMATRIZ A: \n\n";
 		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < col; j++) {
+			for (int j = 0; j < n; j++) {
 				cout << A[i][j] << "  ";
 			}
 			cout << "\n";
@@ -142,6 +127,8 @@ public:
 	void calculateAndPrintValues() {
 
 		equationSolver.vector_iter();
+		equationSolver.metodo_gauss_jacobi();
+		//equationSolver.print_matrix();
 		//printMatrix();
 	}
 };
