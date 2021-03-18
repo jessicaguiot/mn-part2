@@ -4,74 +4,93 @@
 #include <stdio.h>
 #include <iostream>
 #include <cmath>
+#include <vector>
 #include <iomanip>
+#include <cstdlib>
 
 class EquationSolver {
 
 public:
 
-  double A[10][10], x[10], b[10], error, row;
-  int ITER_MAX = 10;
+  double A[10][10], error, row;
+  int ITER_MAX = 20;
   int n, i, j, k;
+  std::vector<double> x;
 
   //construção matriz e vetor de iteração
-  void vector_iter() {
-
+  std::vector<double> vector_iter(std::vector<double> b) {
     for(i = 0; i < n; i++) {
         row = 1/A[i][i];
+        //std::cout << row << "\n";
         for (j = 0; j < n; j++) {
             if (i != j) {
               A[i][j] *= row;
             }
          }
+
          b[i] = b[i]*row;
          x[i] = b[i];
-         //std::cout << std::setprecision(2) << std::fixed << x[i] << '\n';
+         //print_matrix();
     }
+    return x;
   }
 
   //metodo gaus-jacobi
-  void metodo_gauss_jacobi() {
-    double v[10];
+  int metodo_gauss_jacobi(std::vector<double> b) {
+    std::vector<double> v;
+
+    for (int m : b) {
+      v.push_back(0);
+    }
+
     for (k = 0; k < ITER_MAX; k++) {
       for (i = 0; i < n; i++) {
         double soma = 0;
         for (j = 0; j < n; j++) {
+            //std::cout << std::setprecision(3) << std::fixed << A[i][j] << '\n';
             if (i != j) {
               soma = soma + (A[i][j]*x[j]);
             }
         }
-        v[i] = b[i] - soma;
+
+          v[i] = b[i] - soma;
+          //print_vector(v);
       }
 
        double norma = calcula_norma(n, x, v);
+       //print_vector(x);
+       //std::cout << norma << "\n";
        if (norma <= error) {
-         std::cout << "\n\n --- VETOR RESULTADO x --- \n\n";
+         //print_vector(x);
+         //std::cout << "\nNúmero de iterações: " << k << '\n';
+
+         std::cout << "\n\nITERAÇÕES: " << k << "\n\n";
          print_vector(x);
-         std::cout << "\nNúmero de iterações: " << k << '\n';
-         break;
+         return 0;
        }
     }
+    return 1;
   }
 
   //cálculo da norma para o critério de parada
-  double calcula_norma(int n, double (x)[10], double (v)[10]) {
-
+  double calcula_norma(int n, std::vector<double> x, std::vector<double> v) {
     double norma;
-    double normaNum = 0.000, normaDen = 0.0000;
+    double normaNum = 0, normaDen = 0;
     for (i = 0; i < n; i++) {
-      double t = abs(v[i] - x[i]);
+      double t;
+      t = std::abs(v[i]-x[i]);
+      //std::cout << std::setprecision(4) << std::fixed << "T: " << t << '\n';
       if (t > normaNum) {
         normaNum = t;
       }
-
-      if (abs(v[i]) > normaDen) {
-        normaDen = abs(v[i]);
+      if (std::abs(v[i]) > normaDen) {
+        normaDen = std::abs(v[i]);
       }
       x[i] = v[i];
     }
-
-    return norma = (normaNum/normaDen);
+    norma = normaNum/normaDen;
+    //std::cout << std::setprecision(4) << std::fixed << "T: " << normaNum << '\n' << normaDen;
+    return norma;
   }
 
   void print_matrix() {
@@ -84,9 +103,9 @@ public:
     }
   }
 
-  void print_vector(double (v)[10]) {
+  void print_vector(std::vector<double> v) {
     for(i = 0; i < n; i++) {
-      std::cout << v[i] << '\n';
+      std::cout << std::setprecision(3) << std::fixed << v[i] << '\n';
     }
   }
 };

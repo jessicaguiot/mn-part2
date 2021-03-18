@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 #include "EquationSolver.hpp"
 
 using namespace std;
@@ -13,7 +14,9 @@ public:
 	string precisionString, nString;
 	double precision, n;
 	bool shouldContinue = true;
-	double b[10], A[10][10];
+	double A[10][10];
+	vector<double> b;
+
 	EquationSolver equationSolver;
 
 	void startInteraction() {
@@ -85,9 +88,9 @@ public:
 			string value;
 			cin >> value;
 			if (isNumber(value)){
-				b[i] = stod(value);
-				equationSolver.b[i] = b[i];
-				equationSolver.x[i] = 0;
+				b.push_back(stod(value));
+				//equationSolver.b[i] = b[i];
+				equationSolver.x.push_back(0);
 			} else {
 				cout << "Número inválido";
 				shouldContinue = false;
@@ -126,10 +129,19 @@ public:
 
 	void calculateAndPrintValues() {
 
-		equationSolver.vector_iter();
-		equationSolver.metodo_gauss_jacobi();
+    //int result;
+		std::vector<double> y = equationSolver.vector_iter(b);
+  	//std:array<double,10> result;
+
+		int result = equationSolver.metodo_gauss_jacobi(y);
+		//equationSolver.metodo_gauss_jacobi();
 		//equationSolver.print_matrix();
 		//printMatrix();
+
+    std::cout << "\n\n --- VETOR RESULTADO x --- \n\n";
+		cout << result;
+		//equationSolver.print_vector(result);
+		//equationSolver.print_vector(y);
 	}
 };
 
