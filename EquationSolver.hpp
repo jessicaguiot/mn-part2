@@ -90,6 +90,25 @@ public:
     return x;   
   }
 
+  bool line_criterion(vector<vector<long double> > matrix) {
+
+    bool converge = true; 
+
+    for(i = 0; i < n; i++) {
+      long double pivo = matrix[i][i]; 
+      long double soma = 0; 
+      for (j = 0; j < n; j++) {
+        if (i != j) {
+           soma += matrix[i][j];
+        }
+      }
+      if (pivo < soma) {
+        converge = false; 
+      }
+    }
+    return converge;
+  }
+  
 };
 
 #endif /*EquationSolver_hpp */

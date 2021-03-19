@@ -164,8 +164,17 @@ public:
 
 	void calculateAndPrintValues() {
 
-		std::cout << "\n--- MÉTODO GAUSS-JACOBI --- \n";
-		print_vector(equationSolver.gauss_jacobi(matrix, ITER_MAX)); 
+		if (equationSolver.line_criterion(matrix)) {
+
+			std::cout << "\n--- MÉTODO GAUSS-JACOBI --- \n";
+			print_vector(equationSolver.gauss_jacobi(matrix, ITER_MAX)); 
+			
+		} else {
+
+			std::cout << "\n\n\nERROR.\nSegundo o critério de linhas a matriz não irá convergir" << endl; 
+		}
+
+		
     }
 };
 
