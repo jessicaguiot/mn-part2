@@ -12,16 +12,14 @@ class FlowHandler {
 public:
 
 	string precisionString, nString;
-	double precision, n;
+	long double precision, n, ITER_MAX;
 	bool shouldContinue = true;
-	double A[10][10];
-	vector<double> b;
-
+	vector<vector<long double> > matrix;
 	EquationSolver equationSolver;
 
 	void startInteraction() {
 
-		askForDeslocationValue();
+		askForNValue();
 
 		if(shouldContinue){
 			askForMatrixAValues();
@@ -35,6 +33,10 @@ public:
 			askForPrecisionValue();
 		}
 
+		if(shouldContinue) {
+			askForIterValue();
+		}
+
 		calculateAndPrintValues();
 	}
 
@@ -45,9 +47,9 @@ public:
 		return end != s.c_str() && *end == '\0' && val != HUGE_VAL;
 	}
 
-	void askForDeslocationValue() {
+	void askForNValue() {
 
-		cout << "Bem vindo. \n\nInsira o quantidade n: ";
+		cout << "Bem vindo. \n\nInsira a quantidade n: ";
 		cin >> nString;
 		cout << "Você escolheu " << nString << ".\n";
 		cout << "Verificando..\n\n";
@@ -59,40 +61,55 @@ public:
 			cout << nString << " é inválido. Não é um número.\n";
 			shouldContinue = false;
 		}
+
+		matrix.reserve(n); 
 	}
 
 	void askForMatrixAValues() {
 
 		cout << "\n\nValores da Matriz A\n\n";
+
 		for (int i = 0; i < n; i++) {
+
+			vector<long double> row;
 			for (int j = 0; j < n; j++) {
+
 				cout << "Digite o valor de A[" << i+1 << "][" << j+1 << "]: ";
-				string value;
-				cin >> value;
-				if (isNumber(value)){
-					A[i][j] = stod(value);
-					equationSolver.A[i][j] = A[i][j];
+
+				string number;
+				cin >> number;
+				if (isNumber(number)){
+
+					row.push_back(stod(number));
 				} else {
+
 					cout << "Número inválido!";
 					shouldContinue = false;
 				}
 			}
+			matrix.push_back(row);
 		}
 	}
 
 	void askForBValues() {
 
+		vector<long double> b;
 		cout << "\n\nValores da Matriz b\n\n";
+
 		for (int i = 0; i < n; i++) {
 			cout << "Digite valor de b[" << i+1 << "]: ";
-			string value;
-			cin >> value;
-			if (isNumber(value)){
-				b.push_back(stod(value));
-				//equationSolver.b[i] = b[i];
-				equationSolver.x.push_back(0);
+
+			string number;
+			cin >> number;
+			if (isNumber(number)){
+
+				
+				b.push_back(stod(number));
+				matrix[i].push_back(b[i]);
+
 			} else {
-				cout << "Número inválido";
+
+				cout << "Número inválido!";
 				shouldContinue = false;
 			}
 		}
@@ -111,38 +128,45 @@ public:
 		}
 	}
 
-	void printMatrix() {
+	void askForIterValue() {
 
-		cout << "\nMATRIZ A: \n\n";
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				cout << A[i][j] << "  ";
-			}
-			cout << "\n";
-		}
-		cout << "\nMATRIZ b: \n\n";
-		for (int m = 0; m < n; m++) {
-			cout << b[m];
-			cout << "\n";
+		cout << "\n\nDigite o número max de iterações: ";
+
+		string number;
+		cin >> number;
+		if (isNumber(number)){
+			ITER_MAX = stod(number);
+		} else {
+			cout << "\n" << precisionString << " é inválido. Não é um número.\n";
+			shouldContinue = false;
 		}
 	}
+
+	void print_matrix(vector<vector<long double> > matrix) {
+
+		cout << "\n--- MATRIZ --- \n\n";
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j <= n; j++) {
+				std::cout << std::setprecision(2) << std::fixed << matrix[i][j] << "  ";
+			}
+			cout << "\n";
+		} 
+	}
+
+	void print_vector(std::vector<long double> v) {
+
+		std::cout << "\n-- VETOR RESULTADO -- \n";
+		for(int i = 0; i < n; i++) {
+			std::cout << std::setprecision(2) << std::fixed << v[i] << '\n';
+		}
+		cout << endl;
+  	}
 
 	void calculateAndPrintValues() {
 
-    //int result;
-		std::vector<double> y = equationSolver.vector_iter(b);
-  	//std:array<double,10> result;
-
-		int result = equationSolver.metodo_gauss_jacobi(y);
-		//equationSolver.metodo_gauss_jacobi();
-		//equationSolver.print_matrix();
-		//printMatrix();
-
-    std::cout << "\n\n --- VETOR RESULTADO x --- \n\n";
-		cout << result;
-		//equationSolver.print_vector(result);
-		//equationSolver.print_vector(y);
-	}
+		std::cout << "\n--- MÉTODO GAUSS-JACOBI --- \n";
+		print_vector(equationSolver.gauss_jacobi(matrix, ITER_MAX)); 
+    }
 };
 
 #endif /* FlowHandler_hpp */

@@ -8,106 +8,88 @@
 #include <iomanip>
 #include <cstdlib>
 
+using namespace std;
+
 class EquationSolver {
 
 public:
 
-  double A[10][10], error, row;
-  int ITER_MAX = 20;
+  long double error;
   int n, i, j, k;
-  std::vector<double> x;
-
-  //construção matriz e vetor de iteração
-  std::vector<double> vector_iter(std::vector<double> b) {
-    for(i = 0; i < n; i++) {
-        row = 1/A[i][i];
-        //std::cout << row << "\n";
-        for (j = 0; j < n; j++) {
-            if (i != j) {
-              A[i][j] *= row;
-            }
-         }
-
-         b[i] = b[i]*row;
-         x[i] = b[i];
-         //print_matrix();
-    }
-    return x;
-  }
-
-  //metodo gaus-jacobi
-  int metodo_gauss_jacobi(std::vector<double> b) {
-    std::vector<double> v;
-
-    for (int m : b) {
-      v.push_back(0);
-    }
-
-    for (k = 0; k < ITER_MAX; k++) {
-      for (i = 0; i < n; i++) {
-        double soma = 0;
-        for (j = 0; j < n; j++) {
-            //std::cout << std::setprecision(3) << std::fixed << A[i][j] << '\n';
-            if (i != j) {
-              soma = soma + (A[i][j]*x[j]);
-            }
-        }
-
-          v[i] = b[i] - soma;
-          //print_vector(v);
-      }
-
-       double norma = calcula_norma(n, x, v);
-       //print_vector(x);
-       //std::cout << norma << "\n";
-       if (norma <= error) {
-         //print_vector(x);
-         //std::cout << "\nNúmero de iterações: " << k << '\n';
-
-         std::cout << "\n\nITERAÇÕES: " << k << "\n\n";
-         print_vector(x);
-         return 0;
-       }
-    }
-    return 1;
-  }
-
+  
   //cálculo da norma para o critério de parada
-  double calcula_norma(int n, std::vector<double> x, std::vector<double> v) {
-    double norma;
-    double normaNum = 0, normaDen = 0;
-    for (i = 0; i < n; i++) {
-      double t;
-      t = std::abs(v[i]-x[i]);
-      //std::cout << std::setprecision(4) << std::fixed << "T: " << t << '\n';
-      if (t > normaNum) {
-        normaNum = t;
+  long double calcula_norma(int n, vector<long double> x, vector<long double> v) {
+    
+    vector<long double> diff;
+    diff.reserve(n); 
+
+    for(k = 0; k < n; k++) 
+      diff.push_back(fabs(x[k]-v[k])); 
+
+    long double max1 = diff[0], max2 = fabs(v[0]);
+
+    for (i = 1; i < n; i++) {
+
+      if (diff[i] > max1) {
+        max1 = diff[1];
+      }   
+      
+      if (fabs(v[i]) > max2) {
+        max2 = fabs(v[i]);
       }
-      if (std::abs(v[i]) > normaDen) {
-        normaDen = std::abs(v[i]);
-      }
-      x[i] = v[i];
-    }
-    norma = normaNum/normaDen;
-    //std::cout << std::setprecision(4) << std::fixed << "T: " << normaNum << '\n' << normaDen;
-    return norma;
+    } 
+
+    return max1/max2; 
   }
 
-  void print_matrix() {
+  vector<long double> gauss_jacobi(vector<vector<long double> > matrix, int ITER_MAX) {
+ 
+    vector<vector<long double> > m = move(matrix);
+    vector<long double> x; 
 
     for(i = 0; i < n; i++) {
+      x.push_back(0);
+      long double r = m[i][i];
+      for (j = 0; j <= n ; j++) {
+        m[i][j] = m[i][j] / r; 
+      }
+    }
+
+    vector<long double> v;
+    for(k = 0; k < n; k++)   
+      v.push_back(m[k][n]);
+
+    bool flag = true; 
+    int iter = 0; 
+
+    while(flag) {
+
+      iter++; 
+
+      for(i = 0; i < n; i++) {
+      long double soma = 0;  
         for (j = 0; j < n; j++) {
-              std::cout << std::setprecision(2) << std::fixed << A[i][j] << "  ";
-         }
-         std::cout << '\n';
+          if (i != j) {
+            soma = soma + x[j] * m[i][j];
+          }
+        }
+        v[i] = m[i][n] - soma; 
+      }
+
+      if (calcula_norma(n, x, v) <= error || iter > ITER_MAX) {
+         
+        flag = false; 
+        std::cout << "\n-- INTERAÇÕES -- \n" << iter << '\n';
+      } 
+
+      for(k = 0; k < n; k++){
+        x[k] = v[k]; 
+      }       
     }
+ 
+    return x;   
   }
 
-  void print_vector(std::vector<double> v) {
-    for(i = 0; i < n; i++) {
-      std::cout << std::setprecision(3) << std::fixed << v[i] << '\n';
-    }
-  }
 };
 
 #endif /*EquationSolver_hpp */
