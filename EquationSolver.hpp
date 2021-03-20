@@ -175,7 +175,6 @@ public:
           if (norm_calculator(n, x, s) <= error || iter > ITER_MAX) {
               flag = false;
               std::cout << "\n-- ITERAÇÕES -- \n" << iter << '\n';
-              iter = 0;
           }
           for (int i = 0; i < n; i++)
               x[i] = s[i];
@@ -236,13 +235,15 @@ public:
       vector<long double> identityColumnToBeAppended = matrixIdentityGenerator(currentColumnOfIdentityMatrix, matrixOrder);
       
       // JUNTA COM MATRIZ
-      vector<vector<long double> > appendedMatrixAndIdentity = columnAppenderToMatrix(matrix, identityColumnToBeAppended);
+      vector<vector<long double> > appendedMatrixAndIdentity = columnAppender(matrix, identityColumnToBeAppended);
 
       // RESOLVE ATUAL CASO COM SEIDEL
       vector<long double> seidel = gaussSeidel(appendedMatrixAndIdentity, matrixOrder, error, ITER_MAX);
       inverse.push_back(seidel);
       currentColumnOfIdentityMatrix++;
     }
+
+    print_matrix(inverse);
 
     answer = multiply(inverse, b);
     return answer;
@@ -269,6 +270,9 @@ public:
     }
 
     answer = multiply(inverse, b);
+
+    print_matrix(inverse);
+
     return answer; 
   }
 
@@ -280,6 +284,17 @@ public:
 		}
 		cout << endl;
   }
+
+  	void print_matrix(vector<vector<long double> > matrix) {
+
+		cout << "\n--- MATRIZ --- \n\n";
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				std::cout << std::setprecision(5) << std::fixed << matrix[j][i] << "  ";
+			}
+			cout << "\n";
+		} 
+	}
 
   vector<long double> multiply(vector<vector<long double> > matrix, vector<long double> b) {
 
