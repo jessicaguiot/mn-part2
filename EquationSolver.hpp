@@ -109,6 +109,55 @@ public:
     return converge;
   }
   
+  // CALCULO SEIDEL
+  vector<long double> gaussSeidel(vector<vector<long double> > matrix, int n, long double error) {
+      vector<vector<long double> > m = move(matrix);
+      vector<long double> x;
+      x.push_back(0); x.push_back(0); x.push_back(0);
+      for (int i = 0; i < n; i++) {
+          long double r = m[i][i];
+          for (int j = 0; j < n + 1; j++)
+              m[i][j] = m[i][j] / r;
+      }
+      vector<long double> s;
+      s.push_back(m[0][n]); s.push_back(m[1][n]); s.push_back(m[2][n]);
+      bool flag = true;
+      while (flag) {
+          for (int i = 0; i < n; i++) {
+          long double soma = 0;
+              for (int j = 0; j < n; j++) {
+                  if (i != j) {
+                      soma = soma + s[j] * m[i][j];
+                  }
+              }
+              s[i] = m[i][n] - soma;
+          }
+          if (calcula_norma(n, s, x) <= error)
+              flag = false;
+
+          for (int i = 0; i < n; i++)
+              x[i] = s[i];
+      }
+      return x;
+  }
+
+  // GERADORA DE COLUNAS DE MATRIZES IDENTIDADES
+  // columnOrder: Vai de 1 a size
+  vector<long double> matrixIdentityGenerator(int columnOrder, int size) {
+      vector<long double> resultIdentityColumn; 
+      for (int i = 0; i <= size - 1; i++) {
+        if (i == columnOrder - 1) {
+          resultIdentityColumn.push_back(1);
+        } else {
+          resultIdentityColumn.push_back(0);
+        }
+      }
+      for (int i = 0; i < 4; i++) {
+        cout << resultIdentityColumn[i];
+      }
+      return resultIdentityColumn;
+  }
+
 };
 
 #endif /*EquationSolver_hpp */
