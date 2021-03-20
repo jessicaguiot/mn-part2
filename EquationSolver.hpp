@@ -18,7 +18,7 @@ public:
   int n, i, j, k;
   
   //cálculo da norma para o critério de parada
-  long double calcula_norma(int n, vector<long double> x, vector<long double> v) {
+  long double norm_calculator(int n, vector<long double> x, vector<long double> v) {
     
     vector<long double> diff;
     diff.reserve(n); 
@@ -76,7 +76,7 @@ public:
         v[i] = m[i][n] - soma; 
       }
 
-      if (calcula_norma(n, x, v) <= error || iter > ITER_MAX) {
+      if (norm_calculator(n, x, v) <= error || iter > ITER_MAX) {
          
         flag = false; 
         std::cout << "\n-- INTERAÇÕES -- \n" << iter << '\n';
