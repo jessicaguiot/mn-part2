@@ -15,7 +15,9 @@ public:
 	long double precision, n, ITER_MAX;
 	bool shouldContinue = true;
 	vector<vector<long double> > matrix;
+	vector<long double> b;
 	EquationSolver equationSolver;
+	
 
 	void startInteraction() {
 
@@ -93,7 +95,6 @@ public:
 
 	void askForBValues() {
 
-		vector<long double> b;
 		cout << "\n\nValores da Matriz b\n\n";
 
 		for (int i = 0; i < n; i++) {
@@ -102,7 +103,6 @@ public:
 			string number;
 			cin >> number;
 			if (isNumber(number)){
-
 				
 				b.push_back(stod(number));
 				matrix[i].push_back(b[i]);
@@ -174,7 +174,7 @@ public:
 			std::cout << "\n\n\nERROR.\nSegundo o critério de linhas a matriz não irá convergir" << endl; 
 		}
 
-		
+		//print_vector(equationSolver.multiply(matrix, b));
     }
 };
 

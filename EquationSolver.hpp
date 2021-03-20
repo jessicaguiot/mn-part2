@@ -18,7 +18,7 @@ public:
   int n, i, j, k;
   
   //cálculo da norma para o critério de parada
-  long double calcula_norma(int n, vector<long double> x, vector<long double> v) {
+  long double norm_calculator(int n, vector<long double> x, vector<long double> v) {
     
     vector<long double> diff;
     diff.reserve(n); 
@@ -76,7 +76,7 @@ public:
         v[i] = m[i][n] - soma; 
       }
 
-      if (calcula_norma(n, x, v) <= error || iter > ITER_MAX) {
+      if (norm_calculator(n, x, v) <= error || iter > ITER_MAX) {
          
         flag = false; 
         std::cout << "\n-- INTERAÇÕES -- \n" << iter << '\n';
@@ -132,7 +132,7 @@ public:
               }
               s[i] = m[i][n] - soma;
           }
-          if (calcula_norma(n, s, x) <= error)
+          if (norm_calculator(n, s, x) <= error)
               flag = false;
 
           for (int i = 0; i < n; i++)
@@ -156,6 +156,22 @@ public:
         cout << resultIdentityColumn[i];
       }
       return resultIdentityColumn;
+  }
+
+  vector<long double> multiply(vector<vector<long double> > matrix, vector<long double> b) {
+
+    vector<vector<long double> > m = move(matrix);
+    vector<long double> res; 
+
+    for (i = 0; i < n; i++) {
+      long double sum = 0;
+      for (j = 0; j < n; j++) {
+        sum += m[i][j] * b[j];
+      }
+      res.push_back(sum);
+    }   
+
+    return res;  
   }
 
 };
