@@ -105,7 +105,7 @@ public:
 			if (isNumber(number)){
 				
 				b.push_back(stod(number));
-				matrix[i].push_back(b[i]);
+				//matrix[i].push_back(b[i]);
 
 			} else {
 
@@ -157,7 +157,7 @@ public:
 
 		std::cout << "\n-- VETOR RESULTADO -- \n";
 		for(int i = 0; i < n; i++) {
-			std::cout << std::setprecision(2) << std::fixed << v[i] << '\n';
+			std::cout << std::setprecision(6) << std::fixed << v[i] << '\n';
 		}
 		cout << endl;
   	}
@@ -167,14 +167,13 @@ public:
 		if (equationSolver.line_criterion(matrix)) {
 
 			std::cout << "\n--- MÉTODO GAUSS-JACOBI --- \n";
-			print_vector(equationSolver.gauss_jacobi(matrix, ITER_MAX)); 
-			
-		} else {
+			print_vector(equationSolver.getAnswerUsingJacobi(n, matrix, b, ITER_MAX));
 
+			std::cout << "\n--- MÉTODO GAUSS-SEIDEL --- \n";
+			print_vector(equationSolver.getAnswerUsingSeidel(n, matrix, b, precision, ITER_MAX)); 
+		} else {
 			std::cout << "\n\n\nERROR.\nSegundo o critério de linhas a matriz não irá convergir" << endl; 
 		}
-
-		//print_vector(equationSolver.multiply(matrix, b));
     }
 };
 
