@@ -110,7 +110,7 @@ public:
   }
   
   // CALCULO SEIDEL
-  vector<long double> gaussSeidel(vector<vector<long double> > matrix, int n, long double error) {
+  vector<long double> gaussSeidel(vector<vector<long double> > matrix, int n, long double error, int ITER_MAX) {
       vector<vector<long double> > m = move(matrix);
       vector<long double> x;
       x.push_back(0); x.push_back(0); x.push_back(0);
@@ -122,7 +122,9 @@ public:
       vector<long double> s;
       s.push_back(m[0][n]); s.push_back(m[1][n]); s.push_back(m[2][n]);
       bool flag = true;
+      int iter = 0; 
       while (flag) {
+          iter++;
           for (int i = 0; i < n; i++) {
           long double soma = 0;
               for (int j = 0; j < n; j++) {
@@ -132,9 +134,11 @@ public:
               }
               s[i] = m[i][n] - soma;
           }
-          if (norm_calculator(n, s, x) <= error)
+          if (norm_calculator(n, x, s) <= error || iter > ITER_MAX) {
               flag = false;
-
+              std::cout << "\n-- ITERAÇÕES -- \n" << iter << '\n';
+              iter = 0;
+          }
           for (int i = 0; i < n; i++)
               x[i] = s[i];
       }
@@ -145,18 +149,63 @@ public:
   // columnOrder: Vai de 1 a size
   vector<long double> matrixIdentityGenerator(int columnOrder, int size) {
       vector<long double> resultIdentityColumn; 
-      for (int i = 0; i <= size - 1; i++) {
+      for (int i = 0; i < size; i++) {
         if (i == columnOrder - 1) {
           resultIdentityColumn.push_back(1);
         } else {
           resultIdentityColumn.push_back(0);
         }
       }
-      for (int i = 0; i < 4; i++) {
-        cout << resultIdentityColumn[i];
-      }
       return resultIdentityColumn;
   }
+
+  // JUNTADOR DE COLUNAS + MATRIZES
+  // PARAMETRO: MATRIZ e COLUNA
+  // RETORNA MATRIZ NxN+1
+  vector<vector<long double> > columnAppenderToMatrix(vector<vector<long double> > matrix, vector<long double> column) {
+    vector<vector<long double> > newMatrix = move(matrix);
+    newMatrix.push_back(column);
+
+    return newMatrix;
+  }
+
+  // USA O METODO DE SEIDEL E FAZ TODAS AS CHAMADAS NECESSARIAS
+  // A OUTRAS FUNCOES
+  vector<long double> getAnswerUsingSeidel( int matrixOrder, 
+                                            vector<vector<long double> > matrix, 
+                                            vector<long double> b, 
+                                            long double error,
+                                            int ITER_MAX) {
+
+    vector<long double> answer;
+    vector<vector<long double> > inverse;
+    int currentColumnOfIdentityMatrix = 1;
+
+    for (int i = 0; i < matrixOrder; i++) {
+      // PEGA COLUNA DA IDENTIDADE
+      vector<long double> identityColumnToBeAppended = matrixIdentityGenerator(currentColumnOfIdentityMatrix, matrixOrder);
+
+      // JUNTA COM MATRIZ
+      vector<vector<long double> > appendedMatrixAndIdentity = columnAppenderToMatrix(matrix, identityColumnToBeAppended);
+
+      // RESOLVE ATUAL CASO COM SEIDEL
+      vector<long double> seidel = gaussSeidel(appendedMatrixAndIdentity, matrixOrder, error, ITER_MAX);
+      inverse.push_back(seidel);
+      currentColumnOfIdentityMatrix++;
+    }
+
+    answer = multiply(inverse, b);
+    return answer;
+  }
+
+  void print_vector(std::vector<long double> v) {
+
+		std::cout << "\n-- VETOR RESULTADO -- \n";
+		for(int i = 0; i < n; i++) {
+			std::cout << std::setprecision(2) << std::fixed << v[i] << '\n';
+		}
+		cout << endl;
+  	}
 
   vector<long double> multiply(vector<vector<long double> > matrix, vector<long double> b) {
 
