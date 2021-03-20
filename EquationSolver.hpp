@@ -7,6 +7,7 @@
 #include <vector>
 #include <iomanip>
 #include <cstdlib>
+#include <numeric>
 
 using namespace std;
 
@@ -110,6 +111,42 @@ public:
     }
     return converge;
   }
+
+  // confere se a matriz passa no critério de Sassenfeld
+  bool sassenfeldCriteria(vector<vector<long double> > matrix) {
+    vector<long double> betasArray;
+    int line = 1;
+
+    for (int i = 0; i < matrix.size(); i++) {
+      long double newBeta = getBetaForLine(matrix[i], betasArray, line);
+      line++;
+      betasArray.push_back(newBeta);
+      if (newBeta >= 1) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  long double getBetaForLine(vector<long double> arrayValues, vector<long double> betasArray, int line) {
+    long double beta = 0.0;
+    int betasArraySize = betasArray.size();
+    vector<long double> tmpVector;
+    long double sum = 0;
+
+    for (int i = 0; i < arrayValues.size(); i++) {
+      if (i <= betasArraySize - 1) {
+        tmpVector.push_back(fabs(arrayValues[i] * betasArray[i]));
+      } else if (!(i == line -1)) {
+        tmpVector.push_back(fabs(arrayValues[i]));
+      }
+    }
+
+    beta = std::accumulate(tmpVector.begin(), tmpVector.end(), sum) / arrayValues[line - 1];
+    return beta;
+  }
+
+
   
   // CALCULO SEIDEL
   vector<long double> gaussSeidel(vector<vector<long double> > matrix, int n, long double error, int ITER_MAX) {

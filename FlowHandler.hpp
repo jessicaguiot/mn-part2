@@ -164,15 +164,19 @@ public:
 
 	void calculateAndPrintValues() {
 
+		if (equationSolver.sassenfeldCriteria(matrix) || (equationSolver.line_criterion(matrix))) {
+			std::cout << "\n--- MÉTODO GAUSS-SEIDEL --- \n";
+			print_vector(equationSolver.getAnswerUsingSeidel(n, matrix, b, precision, ITER_MAX)); 
+		} else {
+			std::cout << "\n\n\nERROR - SEIDEL.\nSegundo o critério de linhas/Sassenfeld a matriz não irá convergir." << endl; 
+		}
+
 		if (equationSolver.line_criterion(matrix)) {
 
 			std::cout << "\n--- MÉTODO GAUSS-JACOBI --- \n";
 			print_vector(equationSolver.getAnswerUsingJacobi(n, matrix, b, ITER_MAX));
-
-			std::cout << "\n--- MÉTODO GAUSS-SEIDEL --- \n";
-			print_vector(equationSolver.getAnswerUsingSeidel(n, matrix, b, precision, ITER_MAX)); 
 		} else {
-			std::cout << "\n\n\nERROR.\nSegundo o critério de linhas a matriz não irá convergir" << endl; 
+			std::cout << "\n\n\nERROR - JACOBI.\nSegundo o critério de linhas a matriz não irá convergir" << endl; 
 		}
     }
 };
