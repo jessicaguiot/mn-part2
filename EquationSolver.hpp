@@ -109,6 +109,22 @@ public:
     return converge;
   }
   
+  vector<long double> multiply(vector<vector<long double> > matrix, vector<long double> b) {
+
+    vector<vector<long double> > m = move(matrix);
+    vector<long double> res; 
+
+    for (i = 0; i < n; i++) {
+      long double sum = 0;
+      for (j = 0; j < n; j++) {
+        sum += m[i][j] * b[j];
+      }
+      res.push_back(sum);
+    }   
+
+    return res;  
+  }
+
 };
 
 #endif /*EquationSolver_hpp */
