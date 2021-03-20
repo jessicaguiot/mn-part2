@@ -96,7 +96,6 @@ public:
   bool line_criterion(vector<vector<long double> > matrix) {
 
     bool converge = true; 
-
     for(i = 0; i < n; i++) {
       long double pivo = fabs(matrix[i][i]); 
       long double soma = 0; 
@@ -105,7 +104,7 @@ public:
            soma += matrix[i][j];
         }
       }
-      if (pivo < fabs(soma)) {
+      if (pivo <= fabs(soma)) {
         converge = false; 
       }
     }
