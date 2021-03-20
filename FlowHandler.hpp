@@ -11,9 +11,10 @@ using namespace std;
 class FlowHandler {
 public:
 
-	string precisionString, nString;
+	string precisionString, nString, useCriteria;
 	long double precision, n, ITER_MAX;
 	bool shouldContinue = true;
+	bool shouldUseCriteria = true;
 	vector<vector<long double> > matrix;
 	vector<long double> b;
 	EquationSolver equationSolver;
@@ -38,7 +39,7 @@ public:
 		if(shouldContinue) {
 			askForIterValue();
 		}
-
+		askForUsingCriteria();
 		calculateAndPrintValues();
 	}
 
@@ -142,6 +143,15 @@ public:
 		}
 	}
 
+	void askForUsingCriteria() {
+
+		cout << "\n\nDeseja remover os métodos de checagem de convergência? Digite [s] para remover ou deixe em branco caso queira manter: ";
+		cin >> useCriteria;
+		if (useCriteria == "s" || useCriteria == "S") {
+			shouldUseCriteria = false;
+		}
+	}
+
 	void print_matrix(vector<vector<long double> > matrix) {
 
 		cout << "\n--- MATRIZ --- \n\n";
@@ -156,27 +166,46 @@ public:
 	void print_vector(std::vector<long double> v) {
 
 		std::cout << "\n-- VETOR RESULTADO -- \n";
+		bool shouldWarn = false;
 		for(int i = 0; i < n; i++) {
 			std::cout << std::setprecision(6) << std::fixed << v[i] << '\n';
+			if (fabs(v[i]) > 0.4) {
+				shouldWarn = true;
+			}
 		}
 		cout << endl;
+		if (shouldWarn) {
+			cout << "Cuidado: Um dos deslocamentos passa do recomendado de 0.4cm!\n\n";
+		}
   	}
 
 	void calculateAndPrintValues() {
+		if (shouldUseCriteria) {
+			if (equationSolver.line_criterion(matrix)) {
+				std::cout << "\n--- MÉTODO GAUSS-JACOBI --- \n";
+				print_vector(equationSolver.getAnswerUsingJacobi(n, matrix, b, ITER_MAX));
+			} else {
+				std::cout << "\n\n\nERROR - JACOBI.\nSegundo o critério de linhas a matriz não irá convergir" << endl; 
+			}
 
-		if (equationSolver.line_criterion(matrix)) {
+			if (equationSolver.sassenfeldCriteria(matrix)) {
+				if ((equationSolver.line_criterion(matrix))) {
+					std::cout << "\n--- MÉTODO GAUSS-SEIDEL --- \n";
+					print_vector(equationSolver.getAnswerUsingSeidel(n, matrix, b, precision, ITER_MAX)); 
+				} else {
+					std::cout << "\n\n\nERROR - SEIDEL.\nSegundo o critério de linhas a matriz não irá convergir." << endl; 
+				}
+			} else {
+				std::cout << "\n\n\nERROR - SEIDEL.\nSegundo o critério de Sassenfeld a matriz não irá convergir." << endl; 
+			}
+		} else {
 			std::cout << "\n--- MÉTODO GAUSS-JACOBI --- \n";
 			print_vector(equationSolver.getAnswerUsingJacobi(n, matrix, b, ITER_MAX));
-		} else {
-			std::cout << "\n\n\nERROR - JACOBI.\nSegundo o critério de linhas a matriz não irá convergir" << endl; 
-		}
 
-		if (equationSolver.sassenfeldCriteria(matrix) && (equationSolver.line_criterion(matrix))) {
 			std::cout << "\n--- MÉTODO GAUSS-SEIDEL --- \n";
 			print_vector(equationSolver.getAnswerUsingSeidel(n, matrix, b, precision, ITER_MAX)); 
-		} else {
-			std::cout << "\n\n\nERROR - SEIDEL.\nSegundo o critério de linhas/Sassenfeld a matriz não irá convergir." << endl; 
 		}
+		
     }
 };
 
