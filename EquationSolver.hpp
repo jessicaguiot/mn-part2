@@ -51,7 +51,7 @@ public:
     for(i = 0; i < n; i++) {
       x.push_back(0);
       long double r = m[i][i];
-      for (j = 0; j <= n ; j++) {
+      for (j = 0; j < n + 1; j++) {
         m[i][j] = m[i][j] / r; 
       }
     }
@@ -245,7 +245,7 @@ public:
 
     print_matrix(inverse);
 
-    answer = multiply(inverse, b);
+    answer = multiply(matrixOrder, inverse, b);
     return answer;
   }
 
@@ -269,7 +269,7 @@ public:
       currentColumnOfIdentityMatrix++;
     }
 
-    answer = multiply(inverse, b);
+    answer = multiply(matrixOrder, inverse, b);
 
     print_matrix(inverse);
 
@@ -296,7 +296,7 @@ public:
 		} 
 	}
 
-  vector<long double> multiply(vector<vector<long double> > matrix, vector<long double> b) {
+  vector<long double> multiply(int n, vector<vector<long double> > matrix, vector<long double> b) {
 
     vector<vector<long double> > m = move(matrix);
     vector<long double> res; 
@@ -304,7 +304,7 @@ public:
     for (i = 0; i < n; i++) {
       long double sum = 0;
       for (j = 0; j < n; j++) {
-        sum += m[i][j] * b[j];
+        sum = sum + m[j][i] * b[j];
       }
       res.push_back(sum);
     }   
