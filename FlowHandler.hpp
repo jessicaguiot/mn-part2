@@ -238,11 +238,17 @@ public:
 	}
 
 	void calculateAndPrintValues() {
+		long double precision2, n2, ITER_MAX2;
+		precision2 = precision;
+		n2 = n;
+		ITER_MAX2 = ITER_MAX;
+		vector<long double> b2 = b;
+		vector<vector<long double> > matrix2 = move(matrix);
 
 		std::cout << "\n--- MÉTODO GAUSS-SEIDEL --- \n";
 		print_vector(equationSolver.getAnswerUsingSeidel(n, matrix, b, precision, ITER_MAX));
 		std::cout << "\n--- MÉTODO GAUSS-JACOBI --- \n";
-		print_vector(equationSolver.getAnswerUsingJacobi(n, matrix, b, ITER_MAX));
+		print_vector(equationSolver.getAnswerUsingJacobi(n2, matrix2, b2, ITER_MAX2));
 	}
 };
 
