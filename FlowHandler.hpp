@@ -207,16 +207,19 @@ public:
 	}
 
 	void calculateAndPrintValuesUseBothCriteria() {
+		int flagS, flagL = 0;
 
-		if (equationSolver.sassenfeldCriteria(matrix)) {
-			if ((equationSolver.line_criterion(matrix))) {
-				calculateAndPrintValues();
-			} else {
-				std::cout << "\n\n\nERROR.\nSegundo o critério de linhas a matriz não irá convergir." << endl; 
-			}
-		} else {
-			std::cout << "\n\n\nERROR.\nSegundo o critério de Sassenfeld a matriz não irá convergir." << endl; 
+		if (!equationSolver.sassenfeldCriteria(matrix)) {
+			flagS = 1;
+			std::cout << "\n\n\nSegundo o critério de linhas a matriz não irá convergir." << endl; 
 		}
+
+		if ((!equationSolver.line_criterion(matrix))) {
+			flagL = 1;
+			std::cout << "\n\n\nSegundo o critério de Sassenfeld a matriz não irá convergir." << endl; 
+		}
+		
+		calculateAndPrintValues();
 	}
 
 	void useSassenfeldCriteria() {
