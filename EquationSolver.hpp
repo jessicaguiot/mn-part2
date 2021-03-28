@@ -151,14 +151,18 @@ public:
   vector<long double> gaussSeidel(vector<vector<long double> > matrix, int n, long double error, int ITER_MAX) {
       vector<vector<long double> > m = move(matrix);
       vector<long double> x;
-      x.push_back(0); x.push_back(0); x.push_back(0);
       for (int i = 0; i < n; i++) {
+          x.push_back(0);
           long double r = m[i][i];
           for (int j = 0; j < n + 1; j++)
               m[i][j] = m[i][j] / r;
       }
+      
       vector<long double> s;
-      s.push_back(m[0][n]); s.push_back(m[1][n]); s.push_back(m[2][n]);
+      for (int i = 0; i < n; i++) {
+        s.push_back(m[i][n]);
+      }
+
       bool flag = true;
       int iter = 0; 
       while (flag) {
