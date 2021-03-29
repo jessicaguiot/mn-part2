@@ -45,7 +45,7 @@ public:
 
   vector<long double> gauss_jacobi(vector<vector<long double> > matrix, int ITER_MAX) {
  
-    vector<vector<long double> > m = move(matrix);
+    vector<vector<long double> > m = matrix;
     vector<long double> x; 
 
     for(i = 0; i < n; i++) {
@@ -149,7 +149,7 @@ public:
   
   // CALCULO SEIDEL
   vector<long double> gaussSeidel(vector<vector<long double> > matrix, int n, long double error, int ITER_MAX) {
-      vector<vector<long double> > m = move(matrix);
+      vector<vector<long double> > m = matrix;
       vector<long double> x;
       x.push_back(0); x.push_back(0); x.push_back(0);
       for (int i = 0; i < n; i++) {
@@ -200,14 +200,14 @@ public:
   //PARAMETRO: MATRIZ e COLUNA
   //RETORNA MATRIZ NxN+1
   vector<vector<long double> > columnAppenderToMatrix(vector<vector<long double> > matrix, vector<long double> column) {
-    vector<vector<long double> > newMatrix = move(matrix);
+    vector<vector<long double> > newMatrix = matrix;
     newMatrix.push_back(column);
 
     return newMatrix;
   }
 
   vector<vector<long double> > columnAppender(vector<vector<long double> > matrix, vector<long double> column) {
-    vector<vector<long double> > newMatrix = move(matrix);
+    vector<vector<long double> > newMatrix = matrix;
   
     for (i = 0; i < n; i++) {
        newMatrix[i].push_back(column[i]);
@@ -298,7 +298,7 @@ public:
 
   vector<long double> multiply(int n, vector<vector<long double> > matrix, vector<long double> b) {
 
-    vector<vector<long double> > m = move(matrix);
+    vector<vector<long double> > m = matrix;
     vector<long double> res; 
 
     for (i = 0; i < n; i++) {
