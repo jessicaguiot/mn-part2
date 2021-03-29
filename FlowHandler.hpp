@@ -194,7 +194,7 @@ public:
 		}
 		cout << endl;
 		if (shouldWarn) {
-			cout << "Cuidado: Um dos deslocamentos passa do recomendado de 0.4cm!\n\n";
+			cout << "Cuidado: Pelo menos um dos deslocamentos passa do recomendado de 0.4cm!\n\n";
 		}
   	}
 	void calculateAndPrintValuesNotUseCriteria() {
@@ -207,12 +207,12 @@ public:
 
 		if (!equationSolver.sassenfeldCriteria(matrix)) {
 			flagS = 1;
-			std::cout << "\n\n\nSegundo o critério de linhas a matriz não irá convergir." << endl; 
+			std::cout << "\n\n\nSegundo o critério de linhas não há garantia de convergência." << endl; 
 		}
 
 		if ((!equationSolver.line_criterion(matrix))) {
 			flagL = 1;
-			std::cout << "\n\n\nSegundo o critério de Sassenfeld a matriz não irá convergir." << endl; 
+			std::cout << "\n\n\nSegundo o critério de Sassenfeld não há garantia de convergência." << endl; 
 		}
 		
 		calculateAndPrintValues();
@@ -223,7 +223,7 @@ public:
 		if (equationSolver.sassenfeldCriteria(matrix)) {
 			calculateAndPrintValues();
 		} else {
-			std::cout << "\n\n\nERROR.\nSegundo o critério de Sassenfeld a matriz não irá convergir." << endl; 
+			std::cout << "\n\n\nERROR.\nSegundo o critério de Sassenfeld não há garantia de convergência." << endl; 
 		}
 	}
 
@@ -232,7 +232,7 @@ public:
 		if (equationSolver.line_criterion(matrix)) {
 			calculateAndPrintValues();
 		} else {
-			std::cout << "\n\n\nERROR.\nSegundo o critério de linhas a matriz não irá convergir" << endl; 
+			std::cout << "\n\n\nERROR.\nSegundo o critério de linhas não há garantia de convergência." << endl; 
 		}
 	}
 
