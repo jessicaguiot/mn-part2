@@ -46,7 +46,7 @@ public:
   vector<long double> gauss_jacobi(vector<vector<long double> > matrix, int ITER_MAX) {
  
     vector<vector<long double> > m = move(matrix);
-    vector<long double> x; 
+    vector<long double> x;
 
     for(i = 0; i < n; i++) {
       x.push_back(0);
@@ -151,16 +151,20 @@ public:
   vector<long double> gaussSeidel(vector<vector<long double> > matrix, int n, long double error, int ITER_MAX) {
       vector<vector<long double> > m = move(matrix);
       vector<long double> x;
-      for (int i = 0; i < n; i++) {
+      x.reserve(n);
+      for (int i = 0; i < n; i++)
+      {
           x.push_back(0);
           long double r = m[i][i];
           for (int j = 0; j < n + 1; j++)
               m[i][j] = m[i][j] / r;
       }
-      
+
       vector<long double> s;
-      for (int i = 0; i < n; i++) {
-        s.push_back(m[i][n]);
+      s.reserve(n);
+      for (int i = 0; i < n; i++)
+      {
+          s.push_back(m[i][n]);
       }
 
       bool flag = true;
@@ -212,7 +216,8 @@ public:
 
   vector<vector<long double> > columnAppender(vector<vector<long double> > matrix, vector<long double> column) {
     vector<vector<long double> > newMatrix = move(matrix);
-  
+    newMatrix.reserve(n);
+
     for (i = 0; i < n; i++) {
        newMatrix[i].push_back(column[i]);
     }
@@ -233,18 +238,19 @@ public:
     vector<long double> answer;
     vector<vector<long double> > inverse;
     int currentColumnOfIdentityMatrix = 1;
+    for (int i = 0; i < matrixOrder; i++)
+    {
+        // PEGA COLUNA DA IDENTIDADE
+        vector<long double> identityColumnToBeAppended = matrixIdentityGenerator(currentColumnOfIdentityMatrix, matrixOrder);
 
-    for (int i = 0; i < matrixOrder; i++) {
-      // PEGA COLUNA DA IDENTIDADE
-      vector<long double> identityColumnToBeAppended = matrixIdentityGenerator(currentColumnOfIdentityMatrix, matrixOrder);
-      
-      // JUNTA COM MATRIZ
-      vector<vector<long double> > appendedMatrixAndIdentity = columnAppender(matrix, identityColumnToBeAppended);
+        // JUNTA COM MATRIZ
+        vector<vector<long double>> appendedMatrixAndIdentity = columnAppender(matrix, identityColumnToBeAppended);
 
-      // RESOLVE ATUAL CASO COM SEIDEL
-      vector<long double> seidel = gaussSeidel(appendedMatrixAndIdentity, matrixOrder, error, ITER_MAX);
-      inverse.push_back(seidel);
-      currentColumnOfIdentityMatrix++;
+        // RESOLVE ATUAL CASO COM SEIDEL
+        vector<long double> seidel = gaussSeidel(appendedMatrixAndIdentity, matrixOrder, error, ITER_MAX);
+        cout << "entrou" << endl;
+        inverse.push_back(seidel);
+        currentColumnOfIdentityMatrix++;
     }
 
     print_matrix(inverse);
