@@ -151,7 +151,6 @@ public:
 		std::cout << "(1): Usar apenas o Critério de Convergência das Linhas" << std::endl;
 		std::cout << "(2): Usar apenas o Critério de Convergência Sassenfeld" << std::endl;
 		std::cout << "(3): Usar os dois Critérios de Convergência - Linhas e Sassenfeld" << std::endl;
-		std::cout << "(4): Não usar nenhum Critério de Convergência" << std::endl;
 		cin >> userChoice;
 
 
@@ -164,9 +163,6 @@ public:
 			break;
 		case 3:
 			calculateAndPrintValuesUseBothCriteria();
-			break;
-		case 4:
-			calculateAndPrintValuesNotUseCriteria();
 			break;
 		default:
 			std::cout << "ERRO! A opção digitada não existe!" << std::endl;

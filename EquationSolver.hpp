@@ -157,7 +157,7 @@ public:
           for (int j = 0; j < n + 1; j++)
               m[i][j] = m[i][j] / r;
       }
-      cout << "asdasd" << endl;
+
       vector<long double> s;
       for (int i = 0; i < n; i++)
           s.push_back(m[0][n]);
@@ -289,7 +289,7 @@ public:
 
   	void print_matrix(vector<vector<long double> > matrix) {
 
-		cout << "\n--- MATRIZ --- \n\n";
+		cout << "\n--- MATRIZ INVERSA --- \n\n";
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				std::cout << std::setprecision(5) << std::fixed << matrix[j][i] << "  ";
