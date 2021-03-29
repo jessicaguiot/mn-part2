@@ -155,6 +155,8 @@ public:
       for (int i = 0; i < n; i++)
       {
           x.push_back(0);
+          cout << matrix[i][i] << endl;
+          cout << "asdasd" << endl;
           long double r = m[i][i];
           for (int j = 0; j < n + 1; j++)
               m[i][j] = m[i][j] / r;
@@ -166,7 +168,6 @@ public:
       {
           s.push_back(m[i][n]);
       }
-
       bool flag = true;
       int iter = 0; 
       while (flag) {
@@ -247,6 +248,8 @@ public:
         vector<vector<long double>> appendedMatrixAndIdentity = columnAppender(matrix, identityColumnToBeAppended);
 
         // RESOLVE ATUAL CASO COM SEIDEL
+        print_matrix(matrix);
+        print_matrix(appendedMatrixAndIdentity);
         vector<long double> seidel = gaussSeidel(appendedMatrixAndIdentity, matrixOrder, error, ITER_MAX);
         cout << "entrou" << endl;
         inverse.push_back(seidel);
